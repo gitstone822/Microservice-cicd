@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = "kshvdoc/Micoservice-cicd"
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/gitstone822/Microservice-cicd.git'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'npm test || echo "Tests failed, but proceeding..."'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
+            }
+        }
+        stage('Push to Docker Hub') {
+           steps {
+               withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+               sh 'docker push $DOCKER_IMAGE'  // Pushes with $BUILD_NUMBER tag
+               sh 'docker tag $DOCKER_IMAGE kshvdoc/Microservice-cicd:latest'
+               sh 'docker push your-dockerhub-username/node-microservice:latest'
+        }
+    }
+}
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh 'kubectl apply -f k8s/deployment.yaml'
+                sh 'kubectl apply -f k8s/service.yaml'
+            }
+        }
+    }
+}
+

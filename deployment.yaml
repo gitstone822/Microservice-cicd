@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app
+  labels:
+    app: node-app
+spec:
+  replicas: 3  # Runs 3 instances of the app
+  selector:
+    matchLabels:
+      app: node-app
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+        - name: node-container
+          image: kshvdoc/Microservice-cicd:latest  # Docker Image
+          ports:
+            - containerPort: 3000  # Port inside the container
+          env:
+            - name: NODE_ENV
+              value: "production"
