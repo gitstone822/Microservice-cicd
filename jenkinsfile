@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "kshvdoc/Micoservice-cicd"
+        DOCKER_IMAGE = "kshvdoc/micoservice-cicd"
     }
     stages {
         stage('Clone Repository') {
