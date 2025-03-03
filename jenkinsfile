@@ -24,15 +24,10 @@ pipeline {
                 sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
             }
         }
-        stage('Push to Docker Hub') {
-           steps {
-               withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-               sh 'docker push $DOCKER_IMAGE'  // Pushes with $BUILD_NUMBER tag
-               sh 'docker tag $DOCKER_IMAGE kshvdoc/Microservice-cicd:latest'
-               sh 'docker push your-dockerhub-username/node-microservice:latest'
-        }
-    }
+    withDockerRegistry([credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/']) {
+    docker.image('kshvdoc/micoservice-cicd:5').push()
 }
+
 
         stage('Deploy to Kubernetes') {
             steps {
