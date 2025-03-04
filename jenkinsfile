@@ -27,7 +27,7 @@ pipeline {
     stage('Push Docker Image') {
     steps {
         script {
-            withDockerRegistry([credentialsId: 'dockerhub-credentials', url: 'https://index.docker.io/v1/']) {
+            withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
                 docker.image('kshvdoc/micoservice-cicd:5').push()
             }
         }
